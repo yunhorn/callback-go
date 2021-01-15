@@ -33,6 +33,7 @@ func main() {
 		Handler:     r,
 		ReadTimeout: time.Second * 3,
 	}
+	log.Printf("begin recive data from port:%v and path:%s", port, path)
 	err := srv.ListenAndServe()
 	if err != nil {
 		panic(err)
