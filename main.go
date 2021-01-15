@@ -1,8 +1,10 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -14,14 +16,20 @@ type FrontReq struct {
 
 func main() {
 	r := gin.Default()
-	r.POST("/callback", func(c *gin.Context) {
+	var path string
+	var port int64
+	flag.Int64Var(&port, "p", 8080, "服务器地址")
+	flag.StringVar(&path, "path", "/", "数据接收路径")
+	flag.Parse()
+
+	r.POST(path, func(c *gin.Context) {
 		data := c.PostForm("data")
 		log.Println("data:", data)
 		c.JSON(200, nil)
 	})
 
 	srv := &http.Server{
-		Addr:        ":8080",
+		Addr:        ":" + strconv.FormatInt(port, 10),
 		Handler:     r,
 		ReadTimeout: time.Second * 3,
 	}
